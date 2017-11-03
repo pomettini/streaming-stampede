@@ -1,0 +1,10 @@
+# Cargo.toml
+[package]
+name = "streaming-stampede"
+version = "0.0.1"
+authors = ["Giorgio Pomettini"]
+[features]
+cargo-resource-root = []
+[dependencies]
+ggez = "0.3"
+rand = "0.3.14"
