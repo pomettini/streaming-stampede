@@ -21,7 +21,6 @@ const GAME_STATE_PLAY: u32 = GAME_STATES_MAX - 1;
 
 enum PokemonType
 {
-    None,
     Slugma,
     Magcargo,
     // Diglett,
@@ -41,70 +40,70 @@ enum PokemonType
     // Egg,
 }
 
-struct Vector2
-{
-    x: f32,
-    y: f32,
-}
-
 struct Pokemon
 {
     ptype: PokemonType,
-    sprite: Vec<graphics::Image>,
-    sprite_num: u8,
-    pos: Vector2,
+    pos: Point,
     speed: f32,
     isfake: bool,
 }
 
-impl Pokemon
+// impl Pokemon
+// {
+//     fn new(ctx: &mut Context) -> Pokemon 
+//     {
+//         let y_pos = rand::thread_rng().gen_range(0, WINDOW_H);
+//         let speed_boost = rand::thread_rng().gen_range(-50, -25);
+//         let x_pos = rand::thread_rng().gen_range(10, 1000);
+
+//         Pokemon 
+//         {
+//             ptype: PokemonType::Slugma,
+//             sprite_num: 0,
+//             speed: -speed_boost as f32 / 10.0,
+//             isfake: false,
+//         }
+//     }
+
+//     pub fn update(&mut self) 
+//     {
+//         self.pos.x -= self.speed;
+//         self.sprite_num += 1;
+
+//         if(self.sprite_num >= self.sprite.len() as u8)
+//         {
+//             self.sprite_num = 0;
+//         }
+
+//         if(self.pos.x < 0.)
+//         {
+//             self.pos.x = WINDOW_H as f32;
+//         }
+//     }
+// }
+fn spawn_pokemon(ptype: PokemonType) -> Pokemon
 {
-    fn new(ctx: &mut Context) -> Pokemon 
-    {
-        let y_pos = rand::thread_rng().gen_range(0, WINDOW_H);
-        let speed_boost = rand::thread_rng().gen_range(-50, -25);
-        let x_pos = rand::thread_rng().gen_range(10, 1000);
+    let mut speed = 0;
+    let mut isfake = false;
 
-        Pokemon 
-        {
-            ptype: PokemonType::Slugma,
-            sprite: vec![
-                graphics::Image::new(ctx, "/slugma0.png").unwrap(),
-                graphics::Image::new(ctx, "/slugma1.png").unwrap(),
-                graphics::Image::new(ctx, "/slugma2.png").unwrap(),
-                graphics::Image::new(ctx, "/slugma3.png").unwrap(),
-                graphics::Image::new(ctx, "/slugma4.png").unwrap(),
-                graphics::Image::new(ctx, "/slugma5.png").unwrap(),
-            ],
-            sprite_num: 0,
-            pos: Vector2 {x: WINDOW_H as f32 + x_pos as f32, y: y_pos as f32},
-            speed: -speed_boost as f32 / 10.0,
-            isfake: false,
-        }
+    match ptype
+    {
+        PokemonType::Slugma => { speed = 1; isfake = false },
+        PokemonType::Magcargo => { speed = 1; isfake = false },
     }
 
-    pub fn update(&mut self) 
+    Pokemon 
     {
-        self.pos.x -= self.speed;
-        self.sprite_num += 1;
-
-        if(self.sprite_num >= self.sprite.len() as u8)
-        {
-            self.sprite_num = 0;
-        }
-    }
-
-    pub fn draw(&mut self, ctx: &mut Context) -> GameResult<()> 
-    {
-        let dest_point = graphics::Point::new(self.pos.x, self.pos.y);
-        graphics::draw(ctx, &self.sprite[(self.sprite_num) as usize], dest_point, 0.0)?;
-
-        Ok(())
+        ptype: ptype,
+        pos: Point{x: 0., y: 0.},
+        speed: speed as f32,
+        isfake: isfake,
     }
 }
 
 struct MainState 
 {
+    assets: Assets,
     pokemon: Vec<Pokemon>,
     font: graphics::Font,
     title: graphics::Text,
@@ -115,17 +114,24 @@ impl MainState
 {
     fn new(ctx: &mut Context) -> GameResult<MainState> 
     {
+        ctx.print_resource_stats();
+        graphics::set_background_color(ctx, (0, 0, 0, 255).into());
+
+        let assets = Assets::new(ctx)?;
         let mut pokemon = vec![];
         let font = graphics::Font::new(ctx, "/pacifico.ttf", 80)?;
         let title = graphics::Text::new(ctx, "Streaming Stampede", &font)?;
 
-        for _ in 0..30 
-        {
-            pokemon.push(Pokemon::new(ctx));
-        }
+        // for _ in 0..30 
+        // {
+        //     pokemon.push(Pokemon::new(ctx));
+        // }
+
+        pokemon.push(spawn_pokemon(PokemonType::Slugma));
 
         let s = MainState 
         { 
+            assets: assets,
             pokemon: pokemon,
             font: font,
             title: title,
@@ -141,38 +147,93 @@ impl event::EventHandler for MainState
     fn update(&mut self, ctx: &mut Context, dt: Duration) -> GameResult<()> 
     {
         // Calling the update method for every Pokemon
-        for id in 0..30 
-        {
-            self.pokemon[id].update();
-        }
+        // for p in &mut self.pokemon 
+        // {
+        //     p.update();
+        // }
 
         Ok(())
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> 
     {
+        // Clearing the screen
         graphics::clear(ctx);
         
-        if self.state == 0 || self.state > GAME_STATE_PLAY 
+        // if self.state == 0
+        // {
+        //     let text_pos_x: f32 = WINDOW_W as f32 / 2.0;
+        //     let text_pos_y: f32 = WINDOW_H as f32 / 4.0;
+
+        //     graphics::draw(ctx, &self.title, Point { x: text_pos_x, y: text_pos_y }, 0.0)?;
+        // }
+
+        // if self.state < GAME_STATE_PLAY 
+        // {
+        //     for id in 0..30 
+        //     {
+        //         self.pokemon[id].draw(ctx);
+        //     }
+        // }
+
+        let assets = &mut self.assets;
+
+        for p in &self.pokemon 
         {
-            let text_pos_x: f32 = WINDOW_W as f32 / 2.0;
-            let text_pos_y: f32 = WINDOW_H as f32 / 4.0;
-            graphics::draw(ctx, &self.title, Point { x: text_pos_x, y: text_pos_y }, 0.0)?;
+            draw_pokemon(assets, ctx, p)?;
         }
 
-        if self.state < GAME_STATE_PLAY 
-        {
-            for id in 0..30 
-            {
-                self.pokemon[id].draw(ctx);
-            }
-        }
-
+        // Flipping the screen
         graphics::present(ctx);
+
         Ok(())
     }
 }
 
+struct Assets 
+{
+    slugma_spr: Vec<graphics::Image>,
+}
+
+impl Assets 
+{
+    fn new(ctx: &mut Context) -> GameResult<Assets> 
+    {
+        let slugma_spr = vec!
+        [
+            graphics::Image::new(ctx, "/slugma0.png").unwrap(),
+            graphics::Image::new(ctx, "/slugma1.png").unwrap(),
+            graphics::Image::new(ctx, "/slugma2.png").unwrap(),
+            graphics::Image::new(ctx, "/slugma3.png").unwrap(),
+            graphics::Image::new(ctx, "/slugma4.png").unwrap(),
+            graphics::Image::new(ctx, "/slugma5.png").unwrap(),
+        ];
+
+        Ok(Assets 
+        {
+            slugma_spr: slugma_spr,
+        })
+    }
+
+    fn pokemon_sprite(&mut self, pokemon: &Pokemon) -> &mut Vec<graphics::Image> 
+    {
+        match pokemon.ptype 
+        {
+            PokemonType::Slugma => &mut self.slugma_spr,
+            PokemonType::Magcargo => &mut self.slugma_spr,
+        }
+    }
+}
+
+fn draw_pokemon(assets: &mut Assets, ctx: &mut Context, pokemon: &Pokemon) -> GameResult<()> 
+{
+    // TODO: I have to implement a method to go from local to world coordinates to not go mad
+    // And one from world to local too
+    let image = assets.pokemon_sprite(pokemon);
+    let pos = pokemon.pos;
+
+    graphics::draw(ctx, &image[0], pos, 0.0)
+}
 
 fn main() 
 {
