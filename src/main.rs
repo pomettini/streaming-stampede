@@ -183,7 +183,7 @@ impl event::EventHandler for MainState
             draw_pokemon(assets, ctx, p)?;
         }
 
-        // Flipping the screen
+        // Blitting! \m/
         graphics::present(ctx);
 
         Ok(())
