@@ -28,10 +28,10 @@ enum PokemonType
     Dugtrio,
     Voltorb,
     Electrode,
-    // Pichu,
-    // Pikachu,
-    // Togepi,
-    // Doduo,
+    Pichu,
+    Pikachu,
+    Togepi,
+    Doduo,
     // Dodrio,
     // Psyduck,
     // Omanyte,
@@ -69,7 +69,8 @@ impl Pokemon
     pub fn update(&mut self) 
     {
         self.pos.x -= self.speed;
-        self.spr_frame += 0.03 * self.speed;
+        // self.spr_frame += 0.03 * self.speed;
+        self.spr_frame += 0.25;
 
         // Move to the next sprite
         if(self.spr_frame as u8 >= self.spr_num_frames)
@@ -90,7 +91,7 @@ fn spawn_pokemon(ptype: PokemonType) -> Pokemon
     let mut spr_num_frames = 0;
     let mut isfake = false;
 
-    let y_pos = rand::thread_rng().gen_range(WINDOW_H as f32 / 2.0, WINDOW_H as f32 * 0.9);
+    let y_pos = rand::thread_rng().gen_range(WINDOW_H as f32 * 0.6, WINDOW_H as f32 * 0.9);
     let x_pos = rand::thread_rng().gen_range(10.0, 10000.0) + WINDOW_W as f32;
     let speed_boost = rand::thread_rng().gen_range(-6.0, -3.0);
 
@@ -135,6 +136,34 @@ fn spawn_pokemon(ptype: PokemonType) -> Pokemon
         { 
             speed = 2; 
             spr_num_frames = 4; 
+            isfake = false 
+        },
+
+        PokemonType::Pichu => 
+        { 
+            speed = 2; 
+            spr_num_frames = 6; 
+            isfake = false 
+        },
+
+        PokemonType::Pikachu => 
+        { 
+            speed = 3; 
+            spr_num_frames = 6; 
+            isfake = false 
+        },
+
+        PokemonType::Togepi => 
+        { 
+            speed = 1; 
+            spr_num_frames = 6; 
+            isfake = false 
+        },
+
+        PokemonType::Doduo => 
+        { 
+            speed = 4; 
+            spr_num_frames = 6; 
             isfake = false 
         },
     }
@@ -183,6 +212,10 @@ impl MainState
             pokemon.push(spawn_pokemon(PokemonType::Magcargo));
             pokemon.push(spawn_pokemon(PokemonType::Voltorb));
             pokemon.push(spawn_pokemon(PokemonType::Electrode));
+            pokemon.push(spawn_pokemon(PokemonType::Pichu));
+            pokemon.push(spawn_pokemon(PokemonType::Pikachu));
+            pokemon.push(spawn_pokemon(PokemonType::Togepi));
+            pokemon.push(spawn_pokemon(PokemonType::Doduo));
         }
 
         // pokemon.push(spawn_pokemon(PokemonType::Diglett));
@@ -299,6 +332,10 @@ struct Assets
     dugtrio_spr: Vec<graphics::Image>,
     voltorb_spr: Vec<graphics::Image>,
     electrode_spr: Vec<graphics::Image>,
+    pichu_spr: Vec<graphics::Image>,
+    pikachu_spr: Vec<graphics::Image>,
+    togepi_spr: Vec<graphics::Image>,
+    doduo_spr: Vec<graphics::Image>,
 }
 
 impl Assets 
@@ -314,6 +351,10 @@ impl Assets
             dugtrio_spr: load_sprites(ctx, "dugtrio", 5),
             voltorb_spr: load_sprites(ctx, "voltorb", 4),
             electrode_spr: load_sprites(ctx, "electrode", 4),
+            pichu_spr: load_sprites(ctx, "pichu", 6),
+            pikachu_spr: load_sprites(ctx, "pikachu", 6),
+            togepi_spr: load_sprites(ctx, "togepi", 6),
+            doduo_spr: load_sprites(ctx, "doduo", 6),
         })
     }
 
@@ -327,6 +368,10 @@ impl Assets
             PokemonType::Dugtrio => &mut self.dugtrio_spr,
             PokemonType::Voltorb => &mut self.voltorb_spr,
             PokemonType::Electrode => &mut self.electrode_spr,
+            PokemonType::Pichu => &mut self.pichu_spr,
+            PokemonType::Pikachu => &mut self.pikachu_spr,
+            PokemonType::Togepi => &mut self.togepi_spr,
+            PokemonType::Doduo => &mut self.doduo_spr,
         }
     }
 }
@@ -337,7 +382,22 @@ fn draw_pokemon(assets: &mut Assets, ctx: &mut Context, pokemon: &Pokemon) -> Ga
     let pos = pokemon.pos;
     let frame = pokemon.spr_frame;
 
-    graphics::draw(ctx, &image[frame as usize], pos, 0.0)
+    // I draw the background
+    let sprite_options = graphics::DrawParam
+    { 
+        src: Rect { x: -0.0, y: 0.0, w: 1.0, h: 1.0 },
+        dest: pos,
+        rotation: 0.0,
+        scale: Point 
+        { 
+            x: 2.0, 
+            y: 2.0, 
+        },
+        offset: Point { x: 0.0, y: 0.0 },
+        shear: Point { x: 0.0, y: 0.0 },
+    };
+
+    graphics::draw_ex(ctx, &image[frame as usize], sprite_options)
 }
 
 fn main() 
