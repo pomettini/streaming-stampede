@@ -14,12 +14,22 @@ use ggez::timer;
 use std::time::Duration;
 use ggez::audio;
 
+use std::collections::HashMap;
+
 const WINDOW_W: u32 = 1024;
 const WINDOW_H: u32 = 768;
 
-const GAME_STATES_MAX: u32 = 4;
-const GAME_STATE_PLAY: u32 = GAME_STATES_MAX - 1;
+enum GameStates
+{
+    Start,
+    Tutorial,
+    Countdown,
+    Question,
+    Race,
+    Answer,
+}
 
+#[derive(Hash, Eq, PartialEq, Debug, Clone)]
 enum PokemonType
 {
     Slugma,
@@ -85,7 +95,22 @@ impl Pokemon
     }
 }
 
-fn spawn_pokemon(ptype: PokemonType) -> Pokemon
+// #[derive(Hash, Eq, PartialEq, Debug)]
+// struct SpawnedPokemon
+// {
+//     ptype: PokemonType,
+//     pcount: u8,
+// }
+
+// impl SpawnedPokemon
+// {
+//     fn new(ptype: PokemonType, pcount: u8) -> SpawnedPokemon
+//     {
+//         SpawnedPokemon { ptype: ptype, pcount: pcount }
+//     }
+// }
+
+fn spawn_pokemon(ptype: PokemonType, pok_list: &mut HashMap<PokemonType, u8>) -> Pokemon
 {
     let mut speed = 0;
     let mut spr_num_frames = 0;
@@ -94,6 +119,11 @@ fn spawn_pokemon(ptype: PokemonType) -> Pokemon
     let y_pos = rand::thread_rng().gen_range(WINDOW_H as f32 * 0.6, WINDOW_H as f32 * 0.9);
     let x_pos = rand::thread_rng().gen_range(10.0, 10000.0) + WINDOW_W as f32;
     let speed_boost = rand::thread_rng().gen_range(-6.0, -3.0);
+
+    // I add the Pokemons to the list
+    // Yes I used clone sorry :(
+    let count = pok_list.entry(ptype.clone()).or_insert(0);
+    *count += 1;
 
     match ptype
     {
@@ -183,6 +213,7 @@ struct MainState
 {
     assets: Assets,
     pokemon: Vec<Pokemon>,
+    pok_list: HashMap<PokemonType, u8>,
     font: graphics::Font,
     title: graphics::Text,
     state: u32,
@@ -198,6 +229,7 @@ impl MainState
 
         let assets = Assets::new(ctx)?;
         let mut pokemon = vec![];
+        let mut pok_list = HashMap::new();
         let font = graphics::Font::new(ctx, "/pacifico.ttf", 80)?;
         let title = graphics::Text::new(ctx, "Streaming Stampede", &font)?;
 
@@ -208,14 +240,14 @@ impl MainState
 
         for _ in 0..5 
         {
-            pokemon.push(spawn_pokemon(PokemonType::Slugma));
-            pokemon.push(spawn_pokemon(PokemonType::Magcargo));
-            pokemon.push(spawn_pokemon(PokemonType::Voltorb));
-            pokemon.push(spawn_pokemon(PokemonType::Electrode));
-            pokemon.push(spawn_pokemon(PokemonType::Pichu));
-            pokemon.push(spawn_pokemon(PokemonType::Pikachu));
-            pokemon.push(spawn_pokemon(PokemonType::Togepi));
-            pokemon.push(spawn_pokemon(PokemonType::Doduo));
+            pokemon.push(spawn_pokemon(PokemonType::Slugma, &mut pok_list));
+            // pokemon.push(spawn_pokemon(PokemonType::Magcargo, pok_list));
+            // pokemon.push(spawn_pokemon(PokemonType::Voltorb, pok_list));
+            // pokemon.push(spawn_pokemon(PokemonType::Electrode, pok_list));
+            // pokemon.push(spawn_pokemon(PokemonType::Pichu, pok_list));
+            // pokemon.push(spawn_pokemon(PokemonType::Pikachu, pok_list));
+            // pokemon.push(spawn_pokemon(PokemonType::Togepi, pok_list));
+            // pokemon.push(spawn_pokemon(PokemonType::Doduo, pok_list));
         }
 
         // pokemon.push(spawn_pokemon(PokemonType::Diglett));
@@ -225,6 +257,7 @@ impl MainState
         { 
             assets: assets,
             pokemon: pokemon,
+            pok_list: pok_list,
             font: font,
             title: title,
             state: 0,
@@ -419,6 +452,3 @@ fn main()
         println!("Game exited cleanly.");
     }
 }
-
-// Test
-// Test2
