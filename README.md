@@ -3,9 +3,10 @@
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/svenstaro/ggez/blob/master/LICENSE)
 
 
-An attempt in learning Rust by making a game
+An attempt in learning Rust by cloning a minigame from the Nintendo 64 game Pokemon Stadium 2 called Streaming Stampede
 
 Run by using
 ```bash
 cargo run --features=cargo-resource-root
 ```
+Special thanks to [Rust Roma](https://www.meetup.com/it-IT/Rust-Roma/) for helping me out!
