@@ -11,7 +11,7 @@ use ggez::graphics;
 use ggez::graphics::{Point, Rect, DrawMode, Color};
 use ggez::timer;
 use std::time::Duration;
-use ggez::audio;
+// use ggez::audio;
 
 use std::collections::HashMap;
 
@@ -121,7 +121,6 @@ fn spawn_pokemon(ptype: PokemonType, pok_list: &mut HashMap<PokemonType, u8>) ->
     let speed_boost = rand::thread_rng().gen_range(-6.0, -3.0);
 
     // I add the Pokemons to the list
-    // Yes I used clone sorry :(
     let count = pok_list.entry(ptype.clone()).or_insert(0);
     *count += 1;
 
@@ -276,7 +275,7 @@ impl MainState
 
         for (pokemon, count) in &mut pok_list 
         {
-            println!("{:?} counted: {}", pokemon, count);
+            // println!("{:?} counted: {}", pokemon, count);
         }
 
         // pokemon.push(spawn_pokemon(PokemonType::Diglett));
@@ -337,7 +336,7 @@ impl event::EventHandler for MainState
             let delta_time = timer::duration_to_f64(duration);
             self.countdown -= delta_time as f32;
 
-            println!("{}", delta_time);
+            // println!("{}", delta_time);
 
             if self.countdown <= 0.5
             {
