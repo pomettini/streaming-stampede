@@ -12,55 +12,15 @@ use ggez::graphics::{Point, Rect, DrawMode, Color};
 use ggez::timer;
 use std::time::Duration;
 // use ggez::audio;
-
 use std::collections::HashMap;
 
-const WINDOW_W: u32 = 1024;
-const WINDOW_H: u32 = 768;
+pub mod globals;
+pub mod entities;
 
-#[derive(PartialEq)]
-enum GameState
-{
-    Start,
-    Tutorial,
-    Countdown,
-    Question,
-    Race,
-    Answer,
-}
+use globals::*;
+use entities::*;
 
-#[derive(Hash, Eq, PartialEq, Debug, Clone)]
-enum PokemonType
-{
-    Slugma,
-    Magcargo,
-    Diglett,
-    Dugtrio,
-    Voltorb,
-    Electrode,
-    Pichu,
-    Pikachu,
-    Togepi,
-    Doduo,
-    // Dodrio,
-    // Psyduck,
-    // Omanyte,
-    // Magnemite,
-    // Magneton,
-    // Pokeball,
-    // Egg,
-}
-
-struct Pokemon
-{
-    ptype: PokemonType,
-    pos: Point,
-    spr_frame: f32,
-    spr_num_frames: u8,
-    speed: f32,
-    isfake: bool,
-}
-
+/*
 impl Pokemon
 {
     fn new(ctx: &mut Context) -> Pokemon 
@@ -94,6 +54,7 @@ impl Pokemon
         // }
     }
 }
+*/
 
 // #[derive(Hash, Eq, PartialEq, Debug)]
 // struct SpawnedPokemon
@@ -287,7 +248,7 @@ impl MainState
             pokemon: pokemon,
             pok_list: pok_list,
             font: font,
-            state: GameState::Start,
+            state: GameState::Race, // GameState::Start
             input: InputState::default(),
             countdown: countdown,
             is_pressing: false,
