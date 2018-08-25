@@ -42,7 +42,5 @@ pub fn main()
 
     let ctx = &mut cb.build().unwrap();
 
-    use ggez::event::EventHandler;
-
     event::run(ctx);
 }
