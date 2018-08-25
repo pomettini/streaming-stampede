@@ -10,4 +10,4 @@ opt-level = 1
 
 [dependencies]
 ggez = "0.4"
-ggez-goodies = { git = "https://github.com/ggez/ggez-goodies", rev = "aacd12867d886b0331478ab616dcb35e337643a8" }
+sdl2 = "0.31"

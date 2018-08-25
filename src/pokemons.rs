@@ -20,8 +20,9 @@ impl Pokemon
 
     pub fn update(&mut self)
     {
-        self.position.x += self.speed;
+        // self.position.x += self.speed;
         // self.position.y += self.speed;
+        // self.sprite.advance_sprite();
     }
 
     pub fn draw(&self, ctx: &mut Context) -> GameResult<()>
@@ -45,8 +46,8 @@ impl Pokemon
 pub struct PokemonSprite
 {
     pub sprites: Vec<graphics::Image>,
-    pub sprite_index: u32,
-    pub sprite_count: u32
+    pub sprite_index: usize,
+    pub sprite_count: usize
 }
 
 impl PokemonSprite
@@ -57,11 +58,11 @@ impl PokemonSprite
         {
            sprites: Vec::new(),
            sprite_index: 0,
-           sprite_count: 0
+           sprite_count: 0,
         }
     }
 
-    pub fn load_sprites(&mut self, ctx: &mut Context, name: &str, count: u32)
+    pub fn load_sprites(&mut self, ctx: &mut Context, name: &str, count: usize)
     {
         let mut sprites = vec![];
 
@@ -77,6 +78,18 @@ impl PokemonSprite
 
     pub fn get_current_sprite(&self) -> &graphics::Image
     {
-        &self.sprites[0]
+        &self.sprites[self.sprite_index]
+    }
+
+    pub fn advance_sprite(&mut self)
+    {
+        if self.sprite_index < self.sprite_count - 1
+        {
+            self.sprite_index += 1;
+        }
+        else 
+        {
+            self.sprite_index = 0;
+        }
     }
 }

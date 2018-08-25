@@ -1,69 +1,48 @@
 extern crate ggez;
+extern crate sdl2;
+
 use ggez::*;
-use ggez::graphics::*;
+use std::{env, path};
+
+// Using custom version of event
+pub mod event;
 
 pub mod constants;
 pub mod pokemon_types;
 pub mod pokemons;
+pub mod player;
+pub mod states;
+pub mod ui;
+pub mod assets;
+pub mod utils;
+pub mod scenes;
 
 use constants::*;
 use pokemon_types::*;
 use pokemons::*;
-
-struct MainState 
-{
-    pokemons: Vec<Pokemon>,
-}
-
-impl MainState 
-{
-    fn new(ctx: &mut Context) -> GameResult<MainState> 
-    {
-        let mut pokemons = vec![];
-
-        pokemons.push(Pokemon::new(ctx, PokemonType::Slugma));
-        pokemons.push(Pokemon::new(ctx, PokemonType::Magcargo));
-
-        let s = MainState 
-        { 
-            pokemons: pokemons
-        };
-
-        Ok(s)
-    }
-}
-
-impl event::EventHandler for MainState 
-{
-    fn update(&mut self, _ctx: &mut Context) -> GameResult<()> 
-    {
-        for p in &mut self.pokemons
-        {
-            p.update();
-        }
-
-        Ok(())
-    }
-
-    fn draw(&mut self, ctx: &mut Context) -> GameResult<()> 
-    {
-        graphics::clear(ctx);
-
-        for p in &self.pokemons
-        {
-            p.draw(ctx);
-        }
-
-        graphics::present(ctx);
-
-        Ok(())
-    }
-}
+use player::*;
+use states::*;
+use ui::*;
+use assets::*;
+use utils::*;
+use scenes::*;
 
 pub fn main() 
 {
-    let c = conf::Conf::new();
-    let ctx = &mut Context::load_from_conf("Streaming Stampede", "Pomettini", c).unwrap();
-    let state = &mut MainState::new(ctx).unwrap();
-    event::run(ctx, state).unwrap();
+    let mut cb = ContextBuilder::new("Streaming Stampede", "Pomettini")
+        .window_setup(conf::WindowSetup::default().title("Streaming Stampede"))
+        .window_mode(conf::WindowMode::default().dimensions(WINDOW_WIDTH as u32, WINDOW_HEIGHT as u32));
+
+    if let Ok(manifest_dir) = env::var("CARGO_MANIFEST_DIR") 
+    {
+        let mut path = path::PathBuf::from(manifest_dir);
+        path.push("resources/");
+        cb = cb.add_resource_path(path);
+    } 
+
+    let ctx = &mut cb.build().unwrap();
+
+    use ggez::event::EventHandler;
+
+    event::run(ctx);
 }

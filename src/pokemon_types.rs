@@ -108,6 +108,7 @@ pub fn setup_pokemon(ctx: &mut Context, pokemon_type: PokemonType) -> Pokemon
     }
 
     sprite.load_sprites(ctx, &spritesheet_name, spritesheet_frames);
+    sprite.sprite_count = spritesheet_frames;
 
     Pokemon
     {
