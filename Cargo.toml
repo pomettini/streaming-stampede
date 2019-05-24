@@ -7,4 +7,3 @@ authors = ["Giorgio Pomettini"]
 
 [dependencies]
 ggez = ">=0.4"
-sdl2 = ">=0.31"

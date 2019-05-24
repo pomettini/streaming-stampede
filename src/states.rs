@@ -1,5 +1,5 @@
 use assets::*;
-use event::*;
+use ggez::event::*;
 use ggez::graphics;
 use ggez::{Context, GameResult};
 use player::*;

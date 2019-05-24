@@ -1010,7 +1010,6 @@ name = "streaming-stampede"
 version = "0.0.2"
 dependencies = [
  "ggez 0.4.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "sdl2 0.31.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

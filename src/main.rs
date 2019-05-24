@@ -1,25 +1,20 @@
 extern crate ggez;
-extern crate sdl2;
 
 use ggez::*;
 use std::{env, path};
 
 // Using custom version of event
-pub mod event;
-
 pub mod assets;
 pub mod constants;
 pub mod player;
 pub mod pokemon_types;
 pub mod pokemons;
-pub mod scenes;
 pub mod states;
 pub mod ui;
 pub mod utils;
 
 use constants::*;
-
-use scenes::*;
+use states::*;
 
 pub fn main() {
     let mut cb = ContextBuilder::new("Streaming Stampede", "Pomettini")
@@ -36,5 +31,7 @@ pub fn main() {
 
     let ctx = &mut cb.build().unwrap();
 
-    event::run(ctx);
+    let state = &mut MainState::new(ctx).unwrap();
+
+    event::run(ctx, state);
 }
