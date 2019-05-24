@@ -13,7 +13,6 @@
 //!
 //! See the `eventloop` example for an implementation.
 /// A key code.
-
 pub use sdl2::keyboard::Keycode;
 
 /// A struct that holds the state of modifier buttons such as ctrl or shift.
@@ -35,18 +34,17 @@ pub use sdl2::event::EventPollIterator;
 use scenes::*;
 
 use sdl2::EventPump;
-use sdl2::event;
+
 use sdl2::event::Event::*;
 use sdl2::keyboard;
 use sdl2::mouse;
 
-use ggez::graphics;
-use ggez::audio;
-use ggez::{GameResult, Context};
-use ggez::timer;
+use ggez::{Context, GameResult};
 
-pub use sdl2::keyboard::{CAPSMOD, LALTMOD, LCTRLMOD, LGUIMOD, LSHIFTMOD, MODEMOD, NOMOD, NUMMOD,
-                         RALTMOD, RCTRLMOD, RESERVEDMOD, RGUIMOD, RSHIFTMOD};
+pub use sdl2::keyboard::{
+    CAPSMOD, LALTMOD, LCTRLMOD, LGUIMOD, LSHIFTMOD, MODEMOD, NOMOD, NUMMOD, RALTMOD, RCTRLMOD,
+    RESERVEDMOD, RGUIMOD, RSHIFTMOD,
+};
 
 /// A trait defining event callbacks; your primary interface with
 /// `ggez`'s event loop.  Have a type implement this trait and
@@ -194,8 +192,7 @@ impl Events {
 ///
 /// It does not try to do any type of framerate limiting.  See the
 /// documentation for the `timer` module for more info.
-pub fn run(ctx: &mut Context) -> GameResult<()>
-{
+pub fn run(ctx: &mut Context) -> GameResult<()> {
     let mut event_pump = ctx.sdl_context.event_pump()?;
     let mut scene_manager = SceneManager::new(ctx);
 

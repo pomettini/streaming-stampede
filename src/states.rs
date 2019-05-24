@@ -1,30 +1,26 @@
-use ggez::{Context, GameResult};
-use ggez::graphics;
-use event::*;
-use pokemons::*;
-use pokemon_types::*;
-use player::*;
-use ui::*;
 use assets::*;
+use event::*;
+use ggez::graphics;
+use ggez::{Context, GameResult};
+use player::*;
+use pokemon_types::*;
+use pokemons::*;
+use ui::*;
 
-pub struct MainState 
-{
+pub struct MainState {
     pub pokemons: Vec<Pokemon>,
     pub players: Vec<Player>,
     pub assets: Assets,
 }
 
-impl MainState 
-{
-    pub fn new(ctx: &mut Context) -> GameResult<MainState> 
-    {
+impl MainState {
+    pub fn new(ctx: &mut Context) -> GameResult<MainState> {
         let mut pokemons = vec![];
 
         pokemons.push(Pokemon::new(ctx, PokemonType::Slugma));
         pokemons.push(Pokemon::new(ctx, PokemonType::Magcargo));
 
-        let s = MainState 
-        {
+        let s = MainState {
             pokemons: pokemons,
             players: create_players(),
             assets: Assets::new(ctx),
@@ -34,26 +30,21 @@ impl MainState
     }
 }
 
-impl EventHandler for MainState 
-{
-    fn update(&mut self, _ctx: &mut Context) -> GameResult<()> 
-    {
-        for p in &mut self.pokemons
-        {
+impl EventHandler for MainState {
+    fn update(&mut self, _ctx: &mut Context) -> GameResult<()> {
+        for p in &mut self.pokemons {
             p.update();
         }
 
         Ok(())
     }
 
-    fn draw(&mut self, ctx: &mut Context) -> GameResult<()> 
-    {
+    fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
         graphics::clear(ctx);
 
         draw_background(ctx, &self.assets);
-        
-        for p in &self.pokemons
-        {
+
+        for p in &self.pokemons {
             p.draw(ctx);
         }
 
@@ -64,12 +55,15 @@ impl EventHandler for MainState
         Ok(())
     }
 
-    fn key_down_event(&mut self, _ctx: &mut Context, keycode: Keycode, keymod: Mod, repeat: bool) 
-    {
-        for player in &mut self.players
-        {
-            if keycode == *player.get_key()
-            {
+    fn key_down_event(
+        &mut self,
+        _ctx: &mut Context,
+        keycode: Keycode,
+        _keymod: Mod,
+        _repeat: bool,
+    ) {
+        for player in &mut self.players {
+            if keycode == *player.get_key() {
                 player.increase_counter();
             }
         }
