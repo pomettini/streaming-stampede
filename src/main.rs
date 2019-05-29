@@ -12,6 +12,7 @@ pub mod pokemons;
 pub mod states;
 pub mod ui;
 pub mod utils;
+pub mod pokemon_sprite;
 
 use constants::*;
 use states::*;
@@ -33,5 +34,5 @@ pub fn main() {
 
     let state = &mut MainState::new(ctx).unwrap();
 
-    event::run(ctx, state);
+    event::run(ctx, state).unwrap();
 }

@@ -3,9 +3,9 @@ use ggez::event::*;
 use ggez::graphics;
 use ggez::{Context, GameResult};
 use player::*;
-use pokemon_types::*;
 use pokemons::*;
 use ui::*;
+use constants::*;
 
 pub struct MainState {
     pub pokemons: Vec<Pokemon>,
@@ -21,7 +21,7 @@ impl MainState {
         pokemons.push(Pokemon::new(ctx, PokemonType::Magcargo));
 
         let s = MainState {
-            pokemons: pokemons,
+            pokemons,
             players: create_players(),
             assets: Assets::new(ctx),
         };
@@ -42,10 +42,10 @@ impl EventHandler for MainState {
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
         graphics::clear(ctx);
 
-        draw_background(ctx, &self.assets);
+        draw_background(ctx, &self.assets).unwrap();
 
         for p in &self.pokemons {
-            p.draw(ctx);
+            p.draw(ctx).unwrap();
         }
 
         draw_players_counter(ctx, &self.players, &self.assets);

@@ -1,27 +1,8 @@
 use ggez::graphics::*;
 use ggez::Context;
 use pokemons::*;
-
-#[derive(Hash, Eq, PartialEq, Debug, Clone)]
-pub enum PokemonType {
-    Slugma,
-    Magcargo,
-    // Diglett,
-    // Dugtrio,
-    // Voltorb,
-    // Electrode,
-    // Pichu,
-    // Pikachu,
-    // Togepi,
-    // Doduo,
-    // Dodrio,
-    // Psyduck,
-    // Omanyte,
-    // Magnemite,
-    // Magneton,
-    // Pokeball,
-    // Egg,
-}
+use constants::*;
+use pokemon_sprite::*;
 
 pub fn setup_pokemon(ctx: &mut Context, pokemon_type: PokemonType) -> Pokemon {
     let mut sprite = PokemonSprite::new();
@@ -105,10 +86,10 @@ pub fn setup_pokemon(ctx: &mut Context, pokemon_type: PokemonType) -> Pokemon {
     sprite.sprite_count = spritesheet_frames;
 
     Pokemon {
-        pokemon_type: pokemon_type,
-        sprite: sprite,
+        pokemon_type,
+        sprite,
         position: Point2::new(0.0, 0.0),
-        speed: speed,
+        speed,
         isfake: false,
     }
 }

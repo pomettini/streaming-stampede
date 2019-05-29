@@ -1,7 +1,6 @@
 use ggez::event::*;
-use ggez::*;
-
 use ggez::graphics::Point2;
+use ggez::*;
 
 pub struct Player {
     score: usize,
